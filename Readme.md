@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Вячеслав Сливка](https://up.htmlacademy.ru/javascript/11/user/139086).
-* Наставник: `Неизвестно`.
+* Наставник: [Федотов Александр](https://htmlacademy.ru/profile/id247015).
 
 ---
 
