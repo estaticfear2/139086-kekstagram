@@ -24,6 +24,9 @@ var randomInteger = function (min, max) {
 
 var generateDataArray = function (num) {
   var arr = [];
+  var indexComment;
+  var currentIndexComment;
+
   for (var i = 0; i < num; i++) {
     arr[i] = {};
     arr[i]['url'] = 'photos/' + (i + 1) + '.jpg';
@@ -33,25 +36,31 @@ var generateDataArray = function (num) {
     var commentsCount = randomInteger(1, 2);
 
     for (var j = 0; j < commentsCount; j++) {
-      arr[i]['comments'][j] = USERS_COMMENTS[randomInteger(0, 5)];
+      do {
+        currentIndexComment = randomInteger(0, 5);
+      } while (currentIndexComment === indexComment);
+
+      arr[i]['comments'][j] = USERS_COMMENTS[currentIndexComment];
+      indexComment = currentIndexComment;
     }
+    indexComment = null;
 
   }
 
   return arr;
 };
 
-var renderPicture = function (picture) {
+var renderPhoto = function (photo) {
   var element = pictureTemplate.cloneNode(true);
 
-  element.querySelector('img').src = picture['url'];
-  element.querySelector('.picture-likes').textContent = picture['likes'];
-  element.querySelector('.picture-comments').textContent = picture['comments'];
+  element.querySelector('img').src = photo['url'];
+  element.querySelector('.picture-likes').textContent = photo['likes'];
+  element.querySelector('.picture-comments').textContent = photo['comments'];
 
   return element;
 };
 
-var collectPictures = function (arr, elem) {
+var collectPhotos = function (arr, elem) {
   var fragment = document.createDocumentFragment();
 
   for (var i = 0; i < arr.length; i++) {
@@ -61,14 +70,14 @@ var collectPictures = function (arr, elem) {
   return fragment;
 };
 
-var showOverlayPreview = function (item) {
+var showOverlayPreview = function (arr, elem) {
   galleryOverlay.classList.remove('hidden');
-  imageSrc.src = usersPhotos[item]['url'];
-  likes.textContent = usersPhotos[item]['likes'];
-  comments.textContent = usersPhotos[item].comments.length;
+  imageSrc.src = arr[elem]['url'];
+  likes.textContent = arr[elem]['likes'];
+  comments.textContent = arr[elem].comments.length;
 };
 
 var usersPhotos = generateDataArray(25);
 
-pictures.appendChild(collectPictures(usersPhotos, renderPicture));
-showOverlayPreview(0);
+pictures.appendChild(collectPhotos(usersPhotos, renderPhoto));
+showOverlayPreview(usersPhotos, 0);
