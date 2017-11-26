@@ -22,16 +22,16 @@ var randomInteger = function (min, max) {
   return rand;
 };
 
-var generateDataArray = function (num) {
+var generateDataArray = function (num, key1, key2, key3) {
   var arr = [];
   var indexComment;
   var currentIndexComment;
 
   for (var i = 0; i < num; i++) {
     arr[i] = {};
-    arr[i]['url'] = 'photos/' + (i + 1) + '.jpg';
-    arr[i]['likes'] = randomInteger(15, 250);
-    arr[i]['comments'] = [];
+    arr[i][key1] = 'photos/' + (i + 1) + '.jpg';
+    arr[i][key2] = randomInteger(15, 250);
+    arr[i][key3] = [];
 
     var commentsCount = randomInteger(1, 2);
 
@@ -40,7 +40,7 @@ var generateDataArray = function (num) {
         currentIndexComment = randomInteger(0, 5);
       } while (currentIndexComment === indexComment);
 
-      arr[i]['comments'][j] = USERS_COMMENTS[currentIndexComment];
+      arr[i][key3][j] = USERS_COMMENTS[currentIndexComment];
       indexComment = currentIndexComment;
     }
     indexComment = null;
@@ -77,7 +77,7 @@ var showOverlayPreview = function (arr, elem) {
   comments.textContent = arr[elem].comments.length;
 };
 
-var usersPhotos = generateDataArray(25);
+var usersPhotos = generateDataArray(25, 'url', 'likes', 'comments');
 
 pictures.appendChild(collectPhotos(usersPhotos, renderPhoto));
 showOverlayPreview(usersPhotos, 0);
