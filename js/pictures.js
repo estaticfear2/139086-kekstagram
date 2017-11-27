@@ -22,29 +22,29 @@ var randomInteger = function (min, max) {
   return rand;
 };
 
-var generateDataArray = function (num, key1, key2, key3) {
+var generateRandArrayFromSubArray = function (subArray, a, b) {
   var arr = [];
+  var copySubArray = subArray.slice();
+  var commentsCount = randomInteger(a, Math.min(b, subArray.length));
   var indexComment;
-  var currentIndexComment;
+
+  for (var j = 0; j < commentsCount; j++) {
+    indexComment = randomInteger(0, copySubArray.length - 1);
+    arr[j] = copySubArray.splice(indexComment - 1, 1)[0];
+  }
+
+  return arr;
+};
+
+var generateDataArray = function (num) {
+  var arr = [];
 
   for (var i = 0; i < num; i++) {
-    arr[i] = {};
-    arr[i][key1] = 'photos/' + (i + 1) + '.jpg';
-    arr[i][key2] = randomInteger(15, 250);
-    arr[i][key3] = [];
-
-    var commentsCount = randomInteger(1, 2);
-
-    for (var j = 0; j < commentsCount; j++) {
-      do {
-        currentIndexComment = randomInteger(0, 5);
-      } while (currentIndexComment === indexComment);
-
-      arr[i][key3][j] = USERS_COMMENTS[currentIndexComment];
-      indexComment = currentIndexComment;
-    }
-    indexComment = null;
-
+    arr[i] = {
+      url: 'photos/' + (i + 1) + '.jpg',
+      likes: randomInteger(15, 200),
+      comments: generateRandArrayFromSubArray(USERS_COMMENTS, 1, 2)
+    };
   }
 
   return arr;
@@ -77,7 +77,7 @@ var showOverlayPreview = function (arr, elem) {
   comments.textContent = arr[elem].comments.length;
 };
 
-var usersPhotos = generateDataArray(25, 'url', 'likes', 'comments');
+var usersPhotos = generateDataArray(25);
 
 pictures.appendChild(collectPhotos(usersPhotos, renderPhoto));
 showOverlayPreview(usersPhotos, 0);
