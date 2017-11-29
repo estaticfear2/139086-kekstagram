@@ -1,11 +1,15 @@
 'use strict';
 
 var galleryOverlay = document.querySelector('.gallery-overlay');
+var galleryClose = galleryOverlay.querySelector('.gallery-overlay-close');
 var pictures = document.querySelector('.pictures');
 var pictureTemplate = document.querySelector('#picture-template').content.querySelector('.picture');
 var imageSrc = galleryOverlay.querySelector('.gallery-overlay-image');
 var likes = galleryOverlay.querySelector('.likes-count');
 var comments = galleryOverlay.querySelector('.comments-count');
+
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
 
 var USERS_COMMENTS = [
   'Всё отлично!',
@@ -54,8 +58,9 @@ var renderPhoto = function (photo) {
   var element = pictureTemplate.cloneNode(true);
 
   element.querySelector('img').src = photo['url'];
+  element.querySelector('img').tabIndex = '0';
   element.querySelector('.picture-likes').textContent = photo['likes'];
-  element.querySelector('.picture-comments').textContent = photo['comments'];
+  element.querySelector('.picture-comments').textContent = photo['comments'].length;
 
   return element;
 };
@@ -70,14 +75,37 @@ var collectPhotos = function (arr, elem) {
   return fragment;
 };
 
-var showOverlayPreview = function (arr, elem) {
+var showOverlayPreview = function (evt) {
+  var currentImage = evt;
+
   galleryOverlay.classList.remove('hidden');
-  imageSrc.src = arr[elem]['url'];
-  likes.textContent = arr[elem]['likes'];
-  comments.textContent = arr[elem].comments.length;
+  imageSrc.src = currentImage.children[0].src;
+  likes.textContent = currentImage.querySelector('.picture-likes').textContent;
+  comments.textContent = currentImage.querySelectorAll('.picture-comments').length;
+
+  document.addEventListener('keydown', onGalleryOverlayEscPress);
 };
 
 var usersPhotos = generateDataArray(25);
 
 pictures.appendChild(collectPhotos(usersPhotos, renderPhoto));
-showOverlayPreview(usersPhotos, 0);
+
+pictures.addEventListener('click', function (evt) {
+  evt.preventDefault();
+
+  var clickedElement = evt.target.closest('.picture');
+  showOverlayPreview(clickedElement);
+});
+
+var onGalleryOverlayEscPress = function(evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    galleryCloseHandler();
+  }
+};
+
+var galleryCloseHandler = function () {
+  galleryOverlay.classList.add('hidden');
+  document.removeEventListener('keydown', onGalleryOverlayEscPress);
+};
+
+
