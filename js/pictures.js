@@ -58,7 +58,6 @@ var renderPhoto = function (photo) {
   var element = pictureTemplate.cloneNode(true);
 
   element.querySelector('img').src = photo['url'];
-  element.querySelector('img').tabIndex = '0';
   element.querySelector('.picture-likes').textContent = photo['likes'];
   element.querySelector('.picture-comments').textContent = photo['comments'].length;
 
@@ -78,12 +77,9 @@ var collectPhotos = function (arr, elem) {
 var showOverlayPreview = function (evt) {
   var currentImage = evt;
 
-  galleryOverlay.classList.remove('hidden');
   imageSrc.src = currentImage.children[0].src;
   likes.textContent = currentImage.querySelector('.picture-likes').textContent;
   comments.textContent = currentImage.querySelectorAll('.picture-comments').length;
-
-  document.addEventListener('keydown', onGalleryOverlayEscPress);
 };
 
 var usersPhotos = generateDataArray(25);
@@ -94,18 +90,33 @@ pictures.addEventListener('click', function (evt) {
   evt.preventDefault();
 
   var clickedElement = evt.target.closest('.picture');
+
   showOverlayPreview(clickedElement);
+  onOverlayPreviewOpen();
 });
 
-var onGalleryOverlayEscPress = function(evt) {
+var onOverlayPreviewEscPress = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
-    galleryCloseHandler();
+    onOverlayPreviewClose();
   }
 };
 
-var galleryCloseHandler = function () {
-  galleryOverlay.classList.add('hidden');
-  document.removeEventListener('keydown', onGalleryOverlayEscPress);
+var onOverlayPreviewOpen = function () {
+  galleryOverlay.classList.remove('hidden');
+  document.addEventListener('keydown', onOverlayPreviewEscPress);
 };
 
+var onOverlayPreviewClose = function () {
+  galleryOverlay.classList.add('hidden');
+  document.removeEventListener('keydown', onOverlayPreviewEscPress);
+};
 
+galleryClose.addEventListener('click', function () {
+  onOverlayPreviewClose();
+});
+
+galleryClose.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    onOverlayPreviewClose();
+  }
+});
