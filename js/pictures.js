@@ -120,3 +120,83 @@ galleryClose.addEventListener('keydown', function (evt) {
     onOverlayPreviewClose();
   }
 });
+
+// Форма кадрирования
+
+var uploadSelectImage = document.querySelector('#upload-select-image');
+var uploadFile = uploadSelectImage.querySelector('#upload-file');
+var uploadCancel = uploadSelectImage.querySelector('#upload-cancel');
+
+uploadFile.addEventListener('change', function () {
+  onUploadOverlayOpen();
+});
+
+var onUploadOverlayEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE && evt.target.className !== 'upload-form-description') {
+    onUploadOverlayClose();
+  }
+};
+
+// Установка обработчиков при открытии формы кадрирования
+var onUploadOverlayOpen = function () {
+  uploadSelectImage.querySelector('.upload-overlay').classList.remove('hidden');
+  document.addEventListener('keydown', onUploadOverlayEscPress);
+  uploadEffect.addEventListener('change', onUploadEffect);
+  uploadResize.addEventListener('click', onUploadResize);
+  effectImage.style.transform = 'scale(' + resizeValue / 100 + ')';
+};
+
+// Удаление обработчиков, установка дефолтных стилей окна кадрирования
+var onUploadOverlayClose = function () {
+  uploadSelectImage.querySelector('.upload-overlay').classList.add('hidden');
+  uploadSelectImage.reset();
+
+  document.removeEventListener('keydown', onUploadOverlayEscPress);
+  uploadEffect.removeEventListener('change', onUploadEffect);
+  effectImage.className = 'effect-image-preview';
+  uploadResize.removeEventListener('click', onUploadResize);
+  resizeValue = parseInt(resizeControls.getAttribute('value'), 10);
+  effectImage.style.transform = 'scale(' + resizeValue / 100 + ')';
+};
+
+uploadCancel.addEventListener('click', function () {
+  onUploadOverlayClose();
+});
+
+// Применение эффектов к изображению
+var uploadEffect = document.querySelector('.upload-effect-controls');
+var effectImage = document.querySelector('.effect-image-preview');
+
+var onUploadEffect = function (evt) {
+  var filterName = evt.target.closest('input').id.slice(7);
+  effectImage.className = 'effect-image-preview' + ' ' + filterName;
+};
+
+// Изменение масштаба
+var RESIZE_STEP = 25;
+var RESIZE_MIN = 25;
+var RESIZE_MAX = 100;
+
+var uploadResize = document.querySelector('.upload-resize-controls');
+var resizeControls = uploadResize.querySelector('.upload-resize-controls-value');
+var resizeValue = parseInt(resizeControls.getAttribute('value'), 10);
+
+var onUploadResize = function (evt) {
+  if (evt.target.type === 'button') {
+
+    if (evt.target.classList.contains('upload-resize-controls-button-dec')) {
+      if (resizeValue === RESIZE_MIN) {
+        return;
+      }
+      resizeValue = (resizeValue - RESIZE_STEP) < RESIZE_MIN ? RESIZE_MIN : resizeValue - RESIZE_STEP;
+    } else {
+      if (resizeValue === RESIZE_MAX) {
+        return;
+      }
+      resizeValue = (resizeValue + RESIZE_STEP) > RESIZE_MAX ? RESIZE_MAX : resizeValue + RESIZE_STEP;
+    }
+
+    resizeControls.value = resizeValue + '%';
+    effectImage.style.transform = 'scale(' + resizeValue / 100 + ')';
+  }
+};
