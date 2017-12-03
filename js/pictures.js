@@ -122,7 +122,6 @@ galleryClose.addEventListener('keydown', function (evt) {
 });
 
 // Форма кадрирования
-
 var uploadSelectImage = document.querySelector('#upload-select-image');
 var uploadFile = uploadSelectImage.querySelector('#upload-file');
 var uploadCancel = uploadSelectImage.querySelector('#upload-cancel');
@@ -144,6 +143,8 @@ var onUploadOverlayOpen = function () {
   uploadEffect.addEventListener('change', onUploadEffect);
   uploadResize.addEventListener('click', onUploadResize);
   effectImage.style.transform = 'scale(' + resizeValue / 100 + ')';
+  uploadFormSubmit.addEventListener('click', onUploadFormSubmit);
+  hashTags.addEventListener('change', onChangeHashTags);
 };
 
 // Удаление обработчиков, установка дефолтных стилей окна кадрирования
@@ -157,6 +158,7 @@ var onUploadOverlayClose = function () {
   uploadResize.removeEventListener('click', onUploadResize);
   resizeValue = parseInt(resizeControls.getAttribute('value'), 10);
   effectImage.style.transform = 'scale(' + resizeValue / 100 + ')';
+  uploadFormSubmit.removeEventListener('click', onUploadFormSubmit);
 };
 
 uploadCancel.addEventListener('click', function () {
@@ -199,4 +201,63 @@ var onUploadResize = function (evt) {
     resizeControls.value = resizeValue + '%';
     effectImage.style.transform = 'scale(' + resizeValue / 100 + ')';
   }
+};
+
+// Обработчик отправки формы
+var uploadFormSubmit = uploadSelectImage.querySelector('.upload-form-submit');
+var hashTags = uploadSelectImage.querySelector('.upload-form-hashtags');
+
+var onUploadFormSubmit = function (evt) {
+  evt.preventDefault();
+
+  if (!checkHashTags(hashTags.value)) {
+    hashTags.classList.add('upload-message-error');
+    return false;
+  }
+
+  uploadSelectImage.submit();
+  uploadSelectImage.reset();
+  return true;
+};
+
+var onChangeHashTags = function () {
+
+  if (!checkHashTags(hashTags.value)) {
+    hashTags.classList.add('upload-message-error');
+    return false;
+  } else {
+    hashTags.classList.remove('upload-message-error');
+  }
+  return true;
+};
+
+var checkHashTags = function (str) {
+  var arr = str.toLowerCase().split(' ');
+
+  var pos = -1;
+  var count = 0;
+  while ((pos = str.indexOf('#', pos + 1)) !== -1) {
+    count++;
+  }
+
+  if (arr.length > 5 || arr.length !== count) {
+    return false;
+  }
+
+  var obj = {};
+  for (var i = 0; i < arr.length; i++) {
+
+    if (arr[i][0] !== '#' || arr[i].length > 20) {
+      return false;
+    }
+
+    var value = arr[i];
+    obj[value] = true;
+  }
+
+  if (arr.length !== Object.keys(obj).length) {
+    return false;
+  }
+
+  return true;
 };
