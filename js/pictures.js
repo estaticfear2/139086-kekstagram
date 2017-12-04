@@ -96,15 +96,18 @@ var showOverlayPreview = function (evt) {
   comments.textContent = currentImage.querySelectorAll('.picture-comments').length;
 };
 
-var checkHashTags = function (str) { 
-  var regexp = /#[\d\w_!]{1,19}/gi;
-  var arr = str.match(regexp);
+var checkHashTags = function (str) {
+  if (!str) {
+    return true;
+  }
+
+  var arr = str.match(/(#[\wа-яё]{1,19} {1}){0,4}(#[\wа-яё]{1,19}){1}/gi)[0].split(' ');
   var obj = {};
 
-  if (!arr || arr.length > 5 || str !== arr.join(' ')) {
+  if (!arr || str !== arr.join(' ')) {
     return false;
   }
-  
+
   for (var i = 0; i < arr.length; i++) {
     var value = arr[i];
     obj[value] = true;
@@ -112,8 +115,8 @@ var checkHashTags = function (str) {
 
   if (arr.length !== Object.keys(obj).length) {
     return false;
-  } 
-  
+  }
+
   return true;
 };
 
@@ -169,24 +172,25 @@ var onUploadEffect = function (evt) {
 
 var onUploadResize = function (evt) {
   if (evt.target.type === 'button') {
-    
+    var shift;
+
     if (evt.target.classList.contains('upload-resize-controls-button-dec')) {
       if (resizeValue === RESIZE_MIN) {
         return;
       }
-      var shift = resizeValue - RESIZE_STEP;
-      resizeValue = (shift < RESIZE_MIN) ? RESIZE_MIN : shift; 
+      shift = resizeValue - RESIZE_STEP;
+      resizeValue = (shift < RESIZE_MIN) ? RESIZE_MIN : shift;
     } else {
       if (resizeValue === RESIZE_MAX) {
         return;
       }
-      var shift = resizeValue + RESIZE_STEP;
+      shift = resizeValue + RESIZE_STEP;
       resizeValue = (shift > RESIZE_MAX) ? RESIZE_MAX : shift;
     }
   }
-  
+
   resizeControls.value = resizeValue + '%';
-  effectImage.style.transform = 'scale(' + resizeValue / 100 + ')';   
+  effectImage.style.transform = 'scale(' + resizeValue / 100 + ')';
 };
 
 var onUploadFormSubmit = function (evt) {
