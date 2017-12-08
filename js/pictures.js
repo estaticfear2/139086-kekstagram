@@ -100,20 +100,23 @@ var checkHashTags = function (str) {
   if (!str) {
     return true;
   }
-
-  var arr = str.match(/(#[\wа-яё]{1,19} {1}){0,4}(#[\wа-яё]{1,19}){1}/gi)[0].split(' ');
-  var obj = {};
-
-  if (!arr || str !== arr.join(' ')) {
+  // отбираю из входной строки хештеги
+  var tags = str.match(/(#[\wа-яё]{1,19} {1}){0,4}(#[\wа-яё]{1,19}){1}/gi);
+  // проверяю, есть ли хештеги
+  //если полученная строка не совпадает с изначальной строкой, значит ввели больше хештегов или есть ошибки
+  if (!strg || str !== tags[0]) {
     return false;
   }
-
-  for (var i = 0; i < arr.length; i++) {
-    var value = arr[i];
+  //разбиваю отобранную строку хештегов на массив хештегов
+  //проверяю хештеги на уникальность, из элементов массива делаю объект с ключами
+  var arr = tags[0].split(' ');
+  var obj = {};
+  for (var i = 0; i < tags.length; i++) {
+    var value = tags[i];
     obj[value] = true;
   }
-
-  if (arr.length !== Object.keys(obj).length) {
+  //проверяю, если ключей в объекте меньше, чем в массиве с хештегами, значит есть совпадения хештегов
+  if (tags.length !== Object.keys(obj).length) {
     return false;
   }
 
@@ -207,13 +210,7 @@ var onUploadFormSubmit = function (evt) {
 };
 
 var onChangeHashTags = function () {
-  if (!checkHashTags(hashTags.value)) {
-    hashTags.classList.add('upload-message-error');
-    return false;
-  } else {
-    hashTags.classList.remove('upload-message-error');
-  }
-  return true;
+  hashTags.classList.toggle('upload-message-error', !checkHashTags(hashTags.value));
 };
 
 var usersPhotos = generateDataArray(25);
