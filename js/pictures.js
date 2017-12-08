@@ -108,19 +108,11 @@ var checkHashTags = function (str) {
     return false;
   }
   //  разбиваю отобранную строку хештегов на массив хештегов
-  //  проверяю хештеги на уникальность, из элементов массива делаю объект с ключами
+  //  проверяю хештеги на уникальность
   var arr = tags[0].split(' ');
-  var obj = {};
-  for (var i = 0; i < arr.length; i++) {
-    var value = arr[i];
-    obj[value] = true;
-  }
-  /*  проверяю, если ключей в объекте меньше, чем в массиве с хештегами, значит есть совпадения хештегов */
-  if (arr.length !== Object.keys(obj).length) {
-    return false;
-  }
-
-  return true;
+  return !arr.some(function (elem, index, array) {
+    return array.indexOf(elem) !== index;
+  });
 };
 
 var onOverlayPreviewEscPress = function (evt) {
