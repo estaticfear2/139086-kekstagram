@@ -67,6 +67,11 @@
     }
   };
 
+  var renderSlider = function (value) {
+    uploadEffectLevelPin.style.left = value + '%';
+    uploadEffectLevelVal.style.width = value + '%';
+  };
+
   var onUploadOverlayEscPress = function (evt) {
     if (evt.keyCode === ESC_KEYCODE && evt.target.className !== 'upload-form-description') {
       onUploadOverlayClose();
@@ -98,6 +103,7 @@
   };
 
   var onUploadEffectChange = function (evt) {
+    var startPinCoords = uploadEffectLevelValue.value;
 
     var filterName = evt.target.closest('input').id.slice(7);
     if (filterName === 'effect-none') {
@@ -106,12 +112,10 @@
     }
 
     uploadEffectLevel.style.display = '';
-    effectImage.className = 'effect-image-preview' + ' ' + filterName;
-    setUploadEffectLevel(uploadEffectLevelValue.value / 100, filterName);
-    uploadEffectLevelPin.style.left = uploadEffectLevelValue.value + '%';
-    uploadEffectLevelVal.style.width = uploadEffectLevelValue.value + '%';
-
     uploadEffectLevelValue.style.display = 'none';
+    effectImage.className = 'effect-image-preview' + ' ' + filterName;
+    setUploadEffectLevel(startPinCoords / 100, filterName);
+    renderSlider(startPinCoords);
 
     var onSliderClick = function (clickEvt) {
       clickEvt.preventDefault();
@@ -119,6 +123,7 @@
       var pinCoords = uploadEffectLevelPin.getBoundingClientRect().left + window.pageXOffset;
       var shiftX = clickEvt.pageX - pinCoords;
       var lineCoords = uploadEffectLine.getBoundingClientRect().left + window.pageXOffset;
+      var sliderWidth = uploadEffectLine.offsetWidth;
 
       var onSliderMove = function (moveEvt) {
         moveEvt.preventDefault();
@@ -126,13 +131,13 @@
         if (newPinCoords < 0) {
           newPinCoords = 0;
         }
-        var sliderWidth = uploadEffectLine.offsetWidth;
+
         if (newPinCoords > sliderWidth) {
           newPinCoords = sliderWidth;
         }
-        uploadEffectLevelPin.style.left = newPinCoords + 'px';
-        uploadEffectLevelVal.style.width = newPinCoords / uploadEffectLine.offsetWidth * 100 + '%';
-        var val = newPinCoords / uploadEffectLine.offsetWidth;
+
+        var val = newPinCoords / sliderWidth;
+        renderSlider(val * 100);
         setUploadEffectLevel(val, filterName);
       };
 
@@ -143,7 +148,6 @@
 
       document.addEventListener('mousemove', onSliderMove);
       document.addEventListener('mouseup', onSliderUp);
-
     };
 
     uploadEffectLevelPin.addEventListener('mousedown', onSliderClick);
