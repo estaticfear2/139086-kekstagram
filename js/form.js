@@ -46,25 +46,17 @@
   };
 
   var setUploadEffectLevel = function (val, filter) {
-    switch (filter) {
-      case 'effect-chrome':
-        effectImage.style.filter = 'grayscale(' + val + ')';
-        break;
-      case 'effect-sepia':
-        effectImage.style.filter = 'sepia(' + val + ')';
-        break;
-      case 'effect-marvin':
-        effectImage.style.filter = 'invert(' + val * 100 + '%)';
-        break;
-      case 'effect-phobos':
-        effectImage.style.filter = 'blur(' + val * 3 + 'px)';
-        break;
-      case 'effect-heat':
-        effectImage.style.filter = 'brightness(' + val * 3 + ')';
-        break;
-      default:
-        effectImage.style.filter = '';
-    }
+
+    var EFFECTS = {
+      'effect-chrome': 'grayscale(' + val + ')',
+      'effect-sepia': 'sepia(' + val + ')',
+      'effect-marvin': 'invert(' + val * 100 + '%)',
+      'effect-phobos': 'blur(' + val * 3 + 'px)',
+      'effect-heat': 'brightness(' + val * 3 + ')',
+      'effect-none': ''
+    };
+
+    effectImage.style.filter = EFFECTS[filter];
   };
 
   var renderSlider = function (value) {
