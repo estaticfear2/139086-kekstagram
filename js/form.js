@@ -6,6 +6,8 @@
   var RESIZE_STEP = 25;
   var RESIZE_MIN = 25;
   var RESIZE_MAX = 100;
+  var RESIZE_INIT = 100;
+
 
   var uploadSelectImage = document.querySelector('#upload-select-image');
   var uploadFile = uploadSelectImage.querySelector('#upload-file');
@@ -14,14 +16,9 @@
   var effectImage = document.querySelector('.effect-image-preview');
   var uploadResize = document.querySelector('.upload-resize-controls');
   var resizeControls = uploadResize.querySelector('.upload-resize-controls-value');
-  var resizeValue = parseInt(resizeControls.getAttribute('value'), 10);
   var uploadFormSubmit = uploadSelectImage.querySelector('.upload-form-submit');
   var hashTags = uploadSelectImage.querySelector('.upload-form-hashtags');
   var uploadEffectLevel = uploadEffect.querySelector('.upload-effect-level');
-  var uploadEffectLevelValue = uploadEffectLevel.querySelector('.upload-effect-level-value');
-  var uploadEffectLevelPin = uploadEffectLevel.querySelector('.upload-effect-level-pin');
-  var uploadEffectLine = uploadEffectLevel.querySelector('.upload-effect-level-line');
-  var uploadEffectLevelVal = uploadEffectLine.querySelector('.upload-effect-level-val');
 
   var checkHashTags = function (str) {
     if (!str) {
@@ -37,6 +34,19 @@
     return !arr.some(function (elem, index, array) {
       return array.indexOf(elem) !== index;
     });
+  };
+
+  var adjustScale = function (scale) {
+    resizeControls.value = scale + '%';
+    effectImage.style.transform = 'scale(' + scale / 100 + ')';
+  };
+
+  var scaleSettings = {
+    step: RESIZE_STEP,
+    min: RESIZE_MIN,
+    max: RESIZE_MAX,
+    init: RESIZE_INIT,
+    decElem: 'upload-resize-controls-button-dec'
   };
 
   var setUploadEffectDefault = function () {
@@ -59,9 +69,8 @@
     effectImage.style.filter = EFFECTS[filter];
   };
 
-  var renderSlider = function (value) {
-    uploadEffectLevelPin.style.left = value + '%';
-    uploadEffectLevelVal.style.width = value + '%';
+  var applyFilter = function (val, filter) {
+    setUploadEffectLevel(val, filter);
   };
 
   var onUploadOverlayEscPress = function (evt) {
@@ -73,10 +82,8 @@
   var onUploadOverlayOpen = function () {
     uploadSelectImage.querySelector('.upload-overlay').classList.remove('hidden');
     document.addEventListener('keydown', onUploadOverlayEscPress);
-    setUploadEffectDefault();
-    uploadEffect.addEventListener('change', onUploadEffectChange);
-    uploadResize.addEventListener('click', onUploadResize);
-    effectImage.style.transform = 'scale(' + resizeValue / 100 + ')';
+    window.initializeFilters(applyFilter, setUploadEffectDefault);
+    window.initializeScale(uploadResize, adjustScale, scaleSettings);
     uploadFormSubmit.addEventListener('click', onUploadFormSubmit);
     hashTags.addEventListener('change', onChangeHashTags);
   };
@@ -84,88 +91,12 @@
   var onUploadOverlayClose = function () {
     uploadSelectImage.querySelector('.upload-overlay').classList.add('hidden');
     document.removeEventListener('keydown', onUploadOverlayEscPress);
-    uploadEffect.removeEventListener('change', onUploadEffectChange);
     effectImage.className = 'effect-image-preview';
-    uploadResize.removeEventListener('click', onUploadResize);
-    resizeValue = parseInt(resizeControls.getAttribute('value'), 10);
-    effectImage.style.transform = 'scale(' + resizeValue / 100 + ')';
+    window.initializeScale.removeResizeScale();
+    window.initializeFilters.removeEffectHandler();
     uploadFormSubmit.removeEventListener('click', onUploadFormSubmit);
     hashTags.removeEventListener('change', onChangeHashTags);
     uploadSelectImage.reset();
-  };
-
-  var onUploadEffectChange = function (evt) {
-    var startPinCoords = uploadEffectLevelValue.value;
-
-    var filterName = evt.target.closest('input').id.slice(7);
-    if (filterName === 'effect-none') {
-      setUploadEffectDefault();
-      return;
-    }
-
-    uploadEffectLevel.style.display = '';
-    uploadEffectLevelValue.style.display = 'none';
-    effectImage.className = 'effect-image-preview' + ' ' + filterName;
-    setUploadEffectLevel(startPinCoords / 100, filterName);
-    renderSlider(startPinCoords);
-
-    var onSliderClick = function (clickEvt) {
-      clickEvt.preventDefault();
-
-      var pinCoords = uploadEffectLevelPin.getBoundingClientRect().left + window.pageXOffset;
-      var shiftX = clickEvt.pageX - pinCoords;
-      var lineCoords = uploadEffectLine.getBoundingClientRect().left + window.pageXOffset;
-      var sliderWidth = uploadEffectLine.offsetWidth;
-
-      var onSliderMove = function (moveEvt) {
-        moveEvt.preventDefault();
-        var newPinCoords = moveEvt.pageX - shiftX - lineCoords;
-        if (newPinCoords < 0) {
-          newPinCoords = 0;
-        }
-
-        if (newPinCoords > sliderWidth) {
-          newPinCoords = sliderWidth;
-        }
-
-        var val = newPinCoords / sliderWidth;
-        renderSlider(val * 100);
-        setUploadEffectLevel(val, filterName);
-      };
-
-      var onSliderUp = function () {
-        document.removeEventListener('mousemove', onSliderMove);
-        document.removeEventListener('mouseup', onSliderUp);
-      };
-
-      document.addEventListener('mousemove', onSliderMove);
-      document.addEventListener('mouseup', onSliderUp);
-    };
-
-    uploadEffectLevelPin.addEventListener('mousedown', onSliderClick);
-  };
-
-  var onUploadResize = function (evt) {
-    if (evt.target.type === 'button') {
-      var shift;
-
-      if (evt.target.classList.contains('upload-resize-controls-button-dec')) {
-        if (resizeValue === RESIZE_MIN) {
-          return;
-        }
-        shift = resizeValue - RESIZE_STEP;
-        resizeValue = (shift < RESIZE_MIN) ? RESIZE_MIN : shift;
-      } else {
-        if (resizeValue === RESIZE_MAX) {
-          return;
-        }
-        shift = resizeValue + RESIZE_STEP;
-        resizeValue = (shift > RESIZE_MAX) ? RESIZE_MAX : shift;
-      }
-    }
-
-    resizeControls.value = resizeValue + '%';
-    effectImage.style.transform = 'scale(' + resizeValue / 100 + ')';
   };
 
   var onUploadFormSubmit = function (evt) {
