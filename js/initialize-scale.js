@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  window.initializeScale = function (scaleElement, adjustScale, scaleSettings) {
+  window.initializeScale = function (scaleElement, adjustScale, scaleSettings, removeHandler) {
     var resizeValue = scaleSettings.init;
 
     var onUploadResize = function (evt) {
@@ -28,10 +28,11 @@
 
     scaleElement.addEventListener('click', onUploadResize);
 
-    window.initializeScale.removeResizeScale = function () {
+    if (removeHandler) {
       scaleElement.removeEventListener('click', onUploadResize);
       adjustScale(scaleSettings.init);
-    };
+    }
+
   };
 
 })();

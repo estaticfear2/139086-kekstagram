@@ -99,8 +99,8 @@
   var onUploadOverlayOpen = function () {
     uploadSelectImage.querySelector('.upload-overlay').classList.remove('hidden');
     document.addEventListener('keydown', onUploadOverlayEscPress);
-    window.initializeFilters(applyFilter, setUploadEffectDefault, showSlider, sliderSettings);
-    window.initializeScale(uploadResize, adjustScale, scaleSettings);
+    window.initializeFilters(applyFilter, setUploadEffectDefault, showSlider, sliderSettings, null);
+    window.initializeScale(uploadResize, adjustScale, scaleSettings, null);
     uploadFormSubmit.addEventListener('click', onUploadFormSubmit);
     hashTags.addEventListener('change', onChangeHashTags);
   };
@@ -109,8 +109,8 @@
     uploadSelectImage.querySelector('.upload-overlay').classList.add('hidden');
     document.removeEventListener('keydown', onUploadOverlayEscPress);
     effectImage.className = 'effect-image-preview';
-    window.initializeScale.removeResizeScale();
-    window.initializeFilters.removeEffectHandler();
+    window.initializeScale(uploadResize, adjustScale, scaleSettings, true);
+    window.initializeFilters(applyFilter, setUploadEffectDefault, showSlider, sliderSettings, true);
     uploadFormSubmit.removeEventListener('click', onUploadFormSubmit);
     hashTags.removeEventListener('change', onChangeHashTags);
     uploadSelectImage.reset();
