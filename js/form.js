@@ -8,7 +8,6 @@
   var RESIZE_MAX = 100;
   var RESIZE_INIT = 100;
 
-
   var uploadSelectImage = document.querySelector('#upload-select-image');
   var uploadFile = uploadSelectImage.querySelector('#upload-file');
   var uploadCancel = uploadSelectImage.querySelector('#upload-cancel');
@@ -19,6 +18,10 @@
   var uploadFormSubmit = uploadSelectImage.querySelector('.upload-form-submit');
   var hashTags = uploadSelectImage.querySelector('.upload-form-hashtags');
   var uploadEffectLevel = uploadEffect.querySelector('.upload-effect-level');
+  var uploadEffectLevelValue = uploadEffectLevel.querySelector('.upload-effect-level-value');
+  var uploadEffectLevelPin = uploadEffectLevel.querySelector('.upload-effect-level-pin');
+  var uploadEffectLine = uploadEffectLevel.querySelector('.upload-effect-level-line');
+  var uploadEffectLevelVal = uploadEffectLine.querySelector('.upload-effect-level-val');
 
   var checkHashTags = function (str) {
     if (!str) {
@@ -51,6 +54,7 @@
 
   var setUploadEffectDefault = function () {
     uploadEffectLevel.style.display = 'none';
+    uploadEffectLevelValue.style.display = 'none';
     effectImage.className = 'effect-image-preview';
     effectImage.style.filter = 'none';
   };
@@ -69,6 +73,19 @@
     effectImage.style.filter = EFFECTS[filter];
   };
 
+  var showSlider = function (filter) {
+    uploadEffectLevel.style.display = '';
+    effectImage.className = 'effect-image-preview' + ' ' + filter;
+  };
+
+  var sliderSettings = {
+    'filterElem': uploadEffect,
+    'pin': uploadEffectLevelPin,
+    'pinLine': uploadEffectLevelVal,
+    'filterLine': uploadEffectLine,
+    'startValue': uploadEffectLevelValue
+  };
+
   var applyFilter = function (val, filter) {
     setUploadEffectLevel(val, filter);
   };
@@ -82,7 +99,7 @@
   var onUploadOverlayOpen = function () {
     uploadSelectImage.querySelector('.upload-overlay').classList.remove('hidden');
     document.addEventListener('keydown', onUploadOverlayEscPress);
-    window.initializeFilters(applyFilter, setUploadEffectDefault);
+    window.initializeFilters(applyFilter, setUploadEffectDefault, showSlider, sliderSettings);
     window.initializeScale(uploadResize, adjustScale, scaleSettings);
     uploadFormSubmit.addEventListener('click', onUploadFormSubmit);
     hashTags.addEventListener('change', onChangeHashTags);

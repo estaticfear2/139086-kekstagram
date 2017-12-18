@@ -1,50 +1,39 @@
 'use strict';
 
 (function () {
-  var uploadEffect = document.querySelector('.upload-effect-controls');
-  var effectImage = document.querySelector('.effect-image-preview');
-  var uploadEffectLevel = uploadEffect.querySelector('.upload-effect-level');
-  var uploadEffectLevelValue = uploadEffectLevel.querySelector('.upload-effect-level-value');
-  var uploadEffectLevelPin = uploadEffectLevel.querySelector('.upload-effect-level-pin');
-  var uploadEffectLine = uploadEffectLevel.querySelector('.upload-effect-level-line');
-  var uploadEffectLevelVal = uploadEffectLine.querySelector('.upload-effect-level-val');
 
-  var renderSlider = function (value) {
-    uploadEffectLevelPin.style.left = value + '%';
-    uploadEffectLevelVal.style.width = value + '%';
-  };
-
-  window.initializeFilters = function (applyFilter, setUploadEffectDefault) {
+  window.initializeFilters = function (applyFilter, setUploadEffectDefault, showSlider, settings) {
     var filterName;
 
-    setUploadEffectDefault();
+    var renderSlider = function (value) {
+      settings.pin.style.left = value + '%';
+      settings.pinLine.style.width = value + '%';
+    };
 
     var onUploadEffectChange = function (evt) {
-      var startPinCoords = uploadEffectLevelValue.value;
+      var startPinCoords = settings.startValue.value;
 
       filterName = evt.target.closest('input').id.slice(7);
       if (filterName === 'effect-none') {
         setUploadEffectDefault();
-        uploadEffectLevelPin.removeEventListener('mousedown', onSliderClick);
+        settings.pin.removeEventListener('mousedown', onSliderClick);
         return;
       }
 
-      uploadEffectLevel.style.display = '';
-      uploadEffectLevelValue.style.display = 'none';
-      effectImage.className = 'effect-image-preview' + ' ' + filterName;
+      showSlider(filterName);
       applyFilter(startPinCoords / 100, filterName);
       renderSlider(startPinCoords);
 
-      uploadEffectLevelPin.addEventListener('mousedown', onSliderClick);
+      settings.pin.addEventListener('mousedown', onSliderClick);
     };
 
     var onSliderClick = function (clickEvt) {
       clickEvt.preventDefault();
 
-      var pinCoords = uploadEffectLevelPin.getBoundingClientRect().left + window.pageXOffset;
+      var pinCoords = settings.pin.getBoundingClientRect().left + window.pageXOffset;
       var shiftX = clickEvt.pageX - pinCoords;
-      var lineCoords = uploadEffectLine.getBoundingClientRect().left + window.pageXOffset;
-      var sliderWidth = uploadEffectLine.offsetWidth;
+      var lineCoords = settings.filterLine.getBoundingClientRect().left + window.pageXOffset;
+      var sliderWidth = settings.filterLine.offsetWidth;
 
       var onSliderMove = function (moveEvt) {
         moveEvt.preventDefault();
@@ -72,11 +61,12 @@
 
     };
 
-    uploadEffect.addEventListener('change', onUploadEffectChange);
+    setUploadEffectDefault();
+    settings.filterElem.addEventListener('change', onUploadEffectChange);
 
     window.initializeFilters.removeEffectHandler = function () {
-      uploadEffectLevelPin.removeEventListener('mousedown', onSliderClick);
-      uploadEffect.removeEventListener('change', onUploadEffectChange);
+      settings.pin.removeEventListener('mousedown', onSliderClick);
+      settings.filterElem.removeEventListener('change', onUploadEffectChange);
     };
   };
 
