@@ -2,7 +2,7 @@
 
 (function () {
 
-  window.initializeFilters = function (applyFilter, setUploadEffectDefault, showSlider, settings, removeHandler) {
+  window.initializeFilters = function (applyFilter, setUploadEffectDefault, showSlider, settings) {
     var filterName;
 
     var renderSlider = function (value) {
@@ -64,11 +64,12 @@
     setUploadEffectDefault();
     settings.filterElem.addEventListener('change', onUploadEffectChange);
 
-    if (removeHandler) {
+    var removeHandler = function () {
       settings.pin.removeEventListener('mousedown', onSliderClick);
       settings.filterElem.removeEventListener('change', onUploadEffectChange);
-    }
+    };
 
+    return removeHandler;
   };
 
 })();

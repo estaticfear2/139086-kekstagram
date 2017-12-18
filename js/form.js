@@ -95,12 +95,14 @@
       onUploadOverlayClose();
     }
   };
+  var removeResizeHandler = null;
+  var removeEffectHandler = null;
 
   var onUploadOverlayOpen = function () {
     uploadSelectImage.querySelector('.upload-overlay').classList.remove('hidden');
     document.addEventListener('keydown', onUploadOverlayEscPress);
-    window.initializeFilters(applyFilter, setUploadEffectDefault, showSlider, sliderSettings, null);
-    window.initializeScale(uploadResize, adjustScale, scaleSettings, null);
+    removeEffectHandler = window.initializeFilters(applyFilter, setUploadEffectDefault, showSlider, sliderSettings);
+    removeResizeHandler = window.initializeScale(uploadResize, adjustScale, scaleSettings);
     uploadFormSubmit.addEventListener('click', onUploadFormSubmit);
     hashTags.addEventListener('change', onChangeHashTags);
   };
@@ -109,8 +111,8 @@
     uploadSelectImage.querySelector('.upload-overlay').classList.add('hidden');
     document.removeEventListener('keydown', onUploadOverlayEscPress);
     effectImage.className = 'effect-image-preview';
-    window.initializeScale(uploadResize, adjustScale, scaleSettings, true);
-    window.initializeFilters(applyFilter, setUploadEffectDefault, showSlider, sliderSettings, true);
+    removeResizeHandler();
+    removeEffectHandler();
     uploadFormSubmit.removeEventListener('click', onUploadFormSubmit);
     hashTags.removeEventListener('change', onChangeHashTags);
     uploadSelectImage.reset();
