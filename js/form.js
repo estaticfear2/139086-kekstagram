@@ -90,13 +90,14 @@
     setUploadEffectLevel(val, filter);
   };
 
+  var removeResizeHandler = null;
+  var removeEffectHandler = null;
+
   var onUploadOverlayEscPress = function (evt) {
     if (evt.keyCode === ESC_KEYCODE && evt.target.className !== 'upload-form-description') {
       onUploadOverlayClose();
     }
   };
-  var removeResizeHandler = null;
-  var removeEffectHandler = null;
 
   var onUploadOverlayOpen = function () {
     uploadSelectImage.querySelector('.upload-overlay').classList.remove('hidden');
@@ -126,8 +127,7 @@
       return false;
     }
 
-    uploadSelectImage.submit();
-    uploadSelectImage.reset();
+    window.backend.save(new FormData(uploadSelectImage), onUploadOverlayClose, window.showOnLoadError);
     return true;
   };
 

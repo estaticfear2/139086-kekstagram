@@ -24,9 +24,11 @@
     document.removeEventListener('keydown', onOverlayPreviewEscPress);
   };
 
-  var usersPhotos = window.generateDataArray(25);
+  var renderPictures = function (data) {
+    pictures.appendChild(window.picture.collectPhotos(data, window.picture.renderPhoto));
+  };
 
-  pictures.appendChild(window.picture.collectPhotos(usersPhotos, window.picture.renderPhoto));
+  window.backend.load(renderPictures, window.showOnLoadError);
 
   pictures.addEventListener('click', function (evt) {
     evt.preventDefault();
