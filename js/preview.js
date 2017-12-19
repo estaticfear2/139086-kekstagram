@@ -11,6 +11,6 @@
 
     imageSrc.src = currentImage.children[0].src;
     likes.textContent = currentImage.querySelector('.picture-likes').textContent;
-    comments.textContent = currentImage.querySelectorAll('.picture-comments').length;
+    comments.textContent = currentImage.querySelector('.picture-comments').textContent;
   };
 })();
