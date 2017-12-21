@@ -1,13 +1,20 @@
 'use strict';
 
 (function () {
+  var ESC_KEYCODE = 27;
+  var ENTER_KEYCODE = 13;
+  
+  var FILTER = {
+    'filter-recommend': 'recommend',
+    'filter-popular': 'likes',
+    'filter-discussed': 'commentsLength',
+    'filter-random': 'filter-random'
+  };
+  
   var galleryOverlay = document.querySelector('.gallery-overlay');
   var galleryClose = galleryOverlay.querySelector('.gallery-overlay-close');
   var pictures = document.querySelector('.pictures');
   var filters = document.querySelector('.filters');
-
-  var ESC_KEYCODE = 27;
-  var ENTER_KEYCODE = 13;
 
   var onOverlayPreviewEscPress = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
@@ -25,30 +32,25 @@
     document.removeEventListener('keydown', onOverlayPreviewEscPress);
   };
 
-  var PHOTOS = null;
+  var photos = null;
 
   var renderPictures = function (data) {
     pictures.appendChild(window.picture.collectPhotos(data, window.picture.renderPhoto));
 
-    if (!PHOTOS) {
-      PHOTOS = data;
-      PHOTOS.forEach(function (item, i) {
+    if (!photos) {
+      photos = data;
+      photos.forEach(function (item, i) {
         item.commentsLength = item.comments.length;
         item.recommend = -i;
       });
       filters.classList.remove('filters-inactive');
     }
   };
-
-  var filter = 'recommend';
+  
+  
 
   var onFilterChange = function (evt) {
-    var FILTER = {
-      'filter-recommend': 'recommend',
-      'filter-popular': 'likes',
-      'filter-discussed': 'commentsLength',
-      'filter-random': 'filter-random'
-    };
+    var filter;
 
     if (evt.target.tagName === 'INPUT') {
       if (filter !== FILTER[evt.target.id]) {
@@ -60,7 +62,7 @@
       window.globals.clearElem(pictures);
 
       var byField = function (field) {
-        if (arguments[0] === 'filter-random') {
+        if (field === 'filter-random') {
           return function () {
             return Math.random() - 0.5;
           };
@@ -71,7 +73,7 @@
         }
       };
 
-      renderPictures(PHOTOS.sort(byField(filter)));
+      renderPictures(photos.sort(byField(filter)));
     }
   };
 
