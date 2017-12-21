@@ -3,14 +3,14 @@
 (function () {
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
-  
+
   var FILTER = {
     'filter-recommend': 'recommend',
     'filter-popular': 'likes',
     'filter-discussed': 'commentsLength',
     'filter-random': 'filter-random'
   };
-  
+
   var galleryOverlay = document.querySelector('.gallery-overlay');
   var galleryClose = galleryOverlay.querySelector('.gallery-overlay-close');
   var pictures = document.querySelector('.pictures');
@@ -46,8 +46,6 @@
       filters.classList.remove('filters-inactive');
     }
   };
-  
-  
 
   var onFilterChange = function (evt) {
     var filter;
