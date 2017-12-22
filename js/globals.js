@@ -30,11 +30,14 @@
       node.style.right = 0;
       node.style.fontSize = '20px';
       node.style.color = 'black';
-      node.style.backgroundColor = 'rgba(255, 255, 255, .5)';
+      node.style.backgroundColor = 'rgba(255, 255, 255, .8)';
       node.style.zIndex = 100;
 
       node.textContent = errorMessage;
       document.body.insertAdjacentElement('afterbegin', node);
+      setInterval(function () {
+        node.parentNode.removeChild(node);
+      }, 5000);
     },
     clearElem: function (elem) {
       for (var i = elem.children.length - 1; i >= 0; i--) {

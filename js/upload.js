@@ -2,6 +2,7 @@
 
 (function () {
   window.onPickFile = function (file, uploadImage, previewImages) {
+    var reader = new FileReader();
     var pickedFile = file.files[0];
     var fileName = pickedFile.name;
     var matches = fileName.match(/\.(gif|jpg|jpeg|png)$/gi);
@@ -11,14 +12,12 @@
       uploadImage.src = reader.result;
 
       for (var i = 0; i < previewImages.length; i++) {
-        previewImages[i].style.backgroundImage = 'url(' + reader.result + ')';
+        previewImages[i].style.backgroundImage = 'url(' + uploadImage.src + ')';
       }
       reader.removeEventListener('load', onLoadPickedFile);
     };
 
     if (matches) {
-      var reader = new FileReader();
-
       reader.addEventListener('load', onLoadPickedFile);
       reader.readAsDataURL(pickedFile);
     }
