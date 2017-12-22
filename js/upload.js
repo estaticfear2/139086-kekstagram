@@ -5,7 +5,7 @@
     var pickedFile = file.files[0];
     var fileName = pickedFile.name;
     var matches = fileName.match(/\.(gif|jpg|jpeg|png)$/gi);
-    var isImage = false;
+    var isImage = Boolean(matches);
 
     var onLoadPickedFile = function () {
       uploadImage.src = reader.result;
@@ -21,7 +21,6 @@
 
       reader.addEventListener('load', onLoadPickedFile);
       reader.readAsDataURL(pickedFile);
-      isImage = true;
     }
 
     return isImage;
