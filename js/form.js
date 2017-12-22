@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  var ESC_KEYCODE = 27;
-
   var RESIZE_STEP = 25;
   var RESIZE_MIN = 25;
   var RESIZE_MAX = 100;
@@ -94,8 +92,8 @@
   var removeEffectHandler = null;
 
   var onUploadOverlayEscPress = function (evt) {
-    if (evt.keyCode === ESC_KEYCODE && evt.target.className !== 'upload-form-description') {
-      onUploadOverlayClose();
+    if (evt.target.className !== 'upload-form-description') {
+      window.globals.isEscEvent(evt, onUploadOverlayClose);
     }
   };
 

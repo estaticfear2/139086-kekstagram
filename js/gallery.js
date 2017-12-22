@@ -1,17 +1,35 @@
 'use strict';
 
 (function () {
+  var FILTER = {
+    'filter-recommend': 'recommend',
+    'filter-popular': 'likes',
+    'filter-discussed': 'commentsLength',
+    'filter-random': 'filter-random'
+  };
+
   var galleryOverlay = document.querySelector('.gallery-overlay');
   var galleryClose = galleryOverlay.querySelector('.gallery-overlay-close');
   var pictures = document.querySelector('.pictures');
+  var filters = document.querySelector('.filters');
 
-  var ESC_KEYCODE = 27;
-  var ENTER_KEYCODE = 13;
+  var photos = null;
+
+  var renderPictures = function (data) {
+    pictures.appendChild(window.picture.collectPhotos(data, window.picture.renderPhoto));
+
+    if (!photos) {
+      photos = data;
+      photos.forEach(function (item, i) {
+        item.commentsLength = item.comments.length;
+        item.recommend = -i;
+      });
+      filters.classList.remove('filters-inactive');
+    }
+  };
 
   var onOverlayPreviewEscPress = function (evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      onOverlayPreviewClose();
-    }
+    window.globals.isEscEvent(evt, onOverlayPreviewClose);
   };
 
   var onOverlayPreviewOpen = function () {
@@ -24,11 +42,34 @@
     document.removeEventListener('keydown', onOverlayPreviewEscPress);
   };
 
-  var renderPictures = function (data) {
-    pictures.appendChild(window.picture.collectPhotos(data, window.picture.renderPhoto));
+  var onFilterChange = function (evt) {
+    var filter;
+
+    if (evt.target.tagName === 'INPUT') {
+      if (filter !== FILTER[evt.target.id]) {
+        filter = FILTER[evt.target.id];
+      } else {
+        return;
+      }
+
+      window.globals.clearElem(pictures);
+
+      photos.sort(function (a, b) {
+        if (filter !== 'filter-random') {
+          return a[filter] > b[filter] ? -1 : 1;
+        } else {
+          return Math.random() - 0.5;
+        }
+      });
+      renderPictures(photos);
+    }
   };
 
   window.backend.load(renderPictures, window.showOnLoadError);
+
+  filters.addEventListener('click', function (evt) {
+    window.globals.debounce(onFilterChange, evt);
+  });
 
   pictures.addEventListener('click', function (evt) {
     evt.preventDefault();
@@ -42,8 +83,6 @@
   });
 
   galleryClose.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
-      onOverlayPreviewClose();
-    }
+    window.globals.isEnterEvent(evt, onOverlayPreviewClose);
   });
 })();
