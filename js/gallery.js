@@ -1,9 +1,6 @@
 'use strict';
 
 (function () {
-  var ESC_KEYCODE = 27;
-  var ENTER_KEYCODE = 13;
-
   var FILTER = {
     'filter-recommend': 'recommend',
     'filter-popular': 'likes',
@@ -17,9 +14,7 @@
   var filters = document.querySelector('.filters');
 
   var onOverlayPreviewEscPress = function (evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      onOverlayPreviewClose();
-    }
+    window.globals.isEscEvent(evt, onOverlayPreviewClose);
   };
 
   var onOverlayPreviewOpen = function () {
@@ -88,8 +83,6 @@
   });
 
   galleryClose.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
-      onOverlayPreviewClose();
-    }
+    window.globals.isEnterEvent(evt, onOverlayPreviewClose);
   });
 })();
