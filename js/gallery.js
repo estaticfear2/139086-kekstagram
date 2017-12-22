@@ -13,20 +13,6 @@
   var pictures = document.querySelector('.pictures');
   var filters = document.querySelector('.filters');
 
-  var onOverlayPreviewEscPress = function (evt) {
-    window.globals.isEscEvent(evt, onOverlayPreviewClose);
-  };
-
-  var onOverlayPreviewOpen = function () {
-    galleryOverlay.classList.remove('hidden');
-    document.addEventListener('keydown', onOverlayPreviewEscPress);
-  };
-
-  var onOverlayPreviewClose = function () {
-    galleryOverlay.classList.add('hidden');
-    document.removeEventListener('keydown', onOverlayPreviewEscPress);
-  };
-
   var photos = null;
 
   var renderPictures = function (data) {
@@ -40,6 +26,20 @@
       });
       filters.classList.remove('filters-inactive');
     }
+  };
+
+  var onOverlayPreviewEscPress = function (evt) {
+    window.globals.isEscEvent(evt, onOverlayPreviewClose);
+  };
+
+  var onOverlayPreviewOpen = function () {
+    galleryOverlay.classList.remove('hidden');
+    document.addEventListener('keydown', onOverlayPreviewEscPress);
+  };
+
+  var onOverlayPreviewClose = function () {
+    galleryOverlay.classList.add('hidden');
+    document.removeEventListener('keydown', onOverlayPreviewEscPress);
   };
 
   var onFilterChange = function (evt) {
