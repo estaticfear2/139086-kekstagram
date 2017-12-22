@@ -126,7 +126,7 @@
       return false;
     }
 
-    window.backend.save(new FormData(uploadSelectImage), onUploadOverlayClose, window.showOnLoadError);
+    window.backend.save(new FormData(uploadSelectImage), onUploadOverlayClose, window.globals.showOnLoadError);
     return true;
   };
 
