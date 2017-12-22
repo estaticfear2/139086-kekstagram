@@ -60,7 +60,7 @@
       window.globals.clearElem(pictures);
 
       photos.sort(function (a, b) {
-        if (filter === 'filter-random') {
+        if (filter !== 'filter-random') {
           return a[filter] > b[filter] ? -1 : 1;
         } else {
           return Math.random() - 0.5;
