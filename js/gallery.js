@@ -65,7 +65,7 @@
     }
   };
 
-  window.backend.load(renderPictures, window.showOnLoadError);
+  window.backend.load(renderPictures, window.globals.showOnLoadError);
 
   filters.addEventListener('click', function (evt) {
     window.globals.debounce(onFilterChange, evt);

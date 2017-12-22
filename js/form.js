@@ -20,6 +20,7 @@
   var uploadEffectLevelPin = uploadEffectLevel.querySelector('.upload-effect-level-pin');
   var uploadEffectLine = uploadEffectLevel.querySelector('.upload-effect-level-line');
   var uploadEffectLevelVal = uploadEffectLine.querySelector('.upload-effect-level-val');
+  var previewImages = uploadEffect.querySelectorAll('.upload-effect-preview');
 
   var checkHashTags = function (str) {
     if (!str) {
@@ -125,7 +126,7 @@
       return false;
     }
 
-    window.backend.save(new FormData(uploadSelectImage), onUploadOverlayClose, window.showOnLoadError);
+    window.backend.save(new FormData(uploadSelectImage), onUploadOverlayClose, window.globals.showOnLoadError);
     return true;
   };
 
@@ -134,7 +135,11 @@
   };
 
   uploadFile.addEventListener('change', function () {
-    onUploadOverlayOpen();
+    if (window.onPickFile(uploadFile, effectImage, previewImages)) {
+      onUploadOverlayOpen();
+    } else {
+      window.globals.showOnLoadError('Выберите файл с разрешением: *.jpg, *.jpeg, *.gif, *.png,');
+    }
   });
 
   uploadCancel.addEventListener('click', function () {

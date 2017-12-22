@@ -30,7 +30,7 @@
       node.style.right = 0;
       node.style.fontSize = '20px';
       node.style.color = 'black';
-      node.style.backgroundColor = 'rgba(255, 255, 255, .5)';
+      node.style.backgroundColor = 'rgba(255, 255, 255, .8)';
       node.style.zIndex = 100;
 
       node.textContent = errorMessage;
