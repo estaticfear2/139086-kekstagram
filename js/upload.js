@@ -12,7 +12,7 @@
       uploadImage.src = reader.result;
 
       for (var i = 0; i < previewImages.length; i++) {
-        previewImages[i].style.backgroundImage = 'url(' + uploadImage.src + ')';
+        previewImages[i].style.backgroundImage = 'url(' + reader.result + ')';
       }
       reader.removeEventListener('load', onLoadPickedFile);
     };

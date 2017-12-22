@@ -36,7 +36,7 @@
       node.textContent = errorMessage;
       document.body.insertAdjacentElement('afterbegin', node);
       setInterval(function () {
-        node.parentNode.removeChild(node);
+        clearElem(node);
       }, 5000);
     },
     clearElem: function (elem) {
