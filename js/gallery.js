@@ -59,19 +59,14 @@
 
       window.globals.clearElem(pictures);
 
-      var byField = function (field) {
-        if (field === 'filter-random') {
-          return function () {
-            return Math.random() - 0.5;
-          };
+      photos.sort(function (a, b) {
+        if (filter === 'filter-random') {
+          return a[filter] > b[filter] ? -1 : 1;
         } else {
-          return function (a, b) {
-            return a[field] > b[field] ? -1 : 1;
-          };
+          return Math.random() - 0.5;
         }
-      };
-
-      renderPictures(photos.sort(byField(filter)));
+      });
+      renderPictures(photos);
     }
   };
 
