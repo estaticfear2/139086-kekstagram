@@ -16,7 +16,7 @@
   var photos = null;
 
   var renderPictures = function (data) {
-    pictures.appendChild(window.picture.collectPhotos(data, window.picture.renderPhoto));
+    pictures.appendChild(window.picture.collectElements(data, window.picture.renderElement));
 
     if (!photos) {
       photos = data;
@@ -57,9 +57,8 @@
       photos.sort(function (a, b) {
         if (filter !== 'filter-random') {
           return a[filter] > b[filter] ? -1 : 1;
-        } else {
-          return Math.random() - 0.5;
         }
+        return Math.random() - 0.5;
       });
       renderPictures(photos);
     }
@@ -73,7 +72,13 @@
 
   pictures.addEventListener('click', function (evt) {
     evt.preventDefault();
+
     var clickedElement = evt.target.closest('.picture');
+
+    if (!clickedElement) {
+      return;
+    }
+
     window.showOverlayPreview(clickedElement);
     onOverlayPreviewOpen();
   });

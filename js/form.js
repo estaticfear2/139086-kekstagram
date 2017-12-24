@@ -27,7 +27,9 @@
       return true;
     }
 
-    var tags = str.match(/(#[\wа-яё]{1,19} {1}){0,4}(#[\wа-яё]{1,19}){1}/gi);
+    str = str.toLowerCase();
+    var tags = str.match(/(#[\wа-яё]{1,19} {1}){0,4}(#[\wа-яё]{1,19}){1}/g);
+
     if (!tags || str !== tags[0]) {
       return false;
     }
@@ -61,12 +63,12 @@
   var setUploadEffectLevel = function (val, filter) {
 
     var EFFECTS = {
-      'effect-chrome': 'grayscale(' + val + ')',
-      'effect-sepia': 'sepia(' + val + ')',
-      'effect-marvin': 'invert(' + val * 100 + '%)',
-      'effect-phobos': 'blur(' + val * 3 + 'px)',
-      'effect-heat': 'brightness(' + val * 3 + ')',
-      'effect-none': ''
+      'upload-effect-chrome': 'grayscale(' + val + ')',
+      'upload-effect-sepia': 'sepia(' + val + ')',
+      'upload-effect-marvin': 'invert(' + val * 100 + '%)',
+      'upload-effect-phobos': 'blur(' + val * 3 + 'px)',
+      'upload-effect-heat': 'brightness(' + val * 3 + ')',
+      'upload-effect-none': ''
     };
 
     effectImage.style.filter = EFFECTS[filter];

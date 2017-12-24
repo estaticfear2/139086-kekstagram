@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var PERCENT = 0.01;
 
   window.initializeFilters = function (applyFilter, setUploadEffectDefault, showSlider, settings) {
     var filterName;
@@ -13,15 +14,15 @@
     var onUploadEffectChange = function (evt) {
       var startPinCoords = settings.startValue.value;
 
-      filterName = evt.target.closest('input').id.slice(7);
-      if (filterName === 'effect-none') {
+      filterName = evt.target.closest('input').id;
+      if (filterName === 'upload-effect-none') {
         setUploadEffectDefault();
         settings.pin.removeEventListener('mousedown', onSliderClick);
         return;
       }
 
       showSlider(filterName);
-      applyFilter(startPinCoords / 100, filterName);
+      applyFilter(startPinCoords * PERCENT, filterName);
       renderSlider(startPinCoords);
 
       settings.pin.addEventListener('mousedown', onSliderClick);
@@ -47,7 +48,7 @@
         }
 
         var val = newPinCoords / sliderWidth;
-        renderSlider(val * 100);
+        renderSlider(val / PERCENT);
         applyFilter(val, filterName);
       };
 

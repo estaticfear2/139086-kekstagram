@@ -4,7 +4,7 @@
   var pictureTemplate = document.querySelector('#picture-template').content.querySelector('.picture');
 
   window.picture = {
-    renderPhoto: function (photo) {
+    renderElement: function (photo) {
       var element = pictureTemplate.cloneNode(true);
 
       element.querySelector('img').src = photo['url'];
@@ -13,12 +13,12 @@
 
       return element;
     },
-    collectPhotos: function (arr, elem) {
+    collectElements: function (arr, elem) {
       var fragment = document.createDocumentFragment();
 
-      for (var i = 0; i < arr.length; i++) {
-        fragment.appendChild(elem(arr[i]));
-      }
+      arr.forEach(function (item) {
+        return fragment.appendChild(elem(item));
+      });
 
       return fragment;
     }

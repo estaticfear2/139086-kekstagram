@@ -2,6 +2,7 @@
 
 (function () {
   var SERVER_URL = 'https://1510.dump.academy/kekstagram';
+  var XHR_TIMEOUT = 10000;
 
   var load = function (data, onLoad, onError) {
     var xhr = new XMLHttpRequest();
@@ -21,7 +22,7 @@
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
-    xhr.timeout = 10000;
+    xhr.timeout = XHR_TIMEOUT;
 
     return xhr;
   };
