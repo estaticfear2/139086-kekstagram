@@ -4,6 +4,9 @@
   var ESC_KEYCODE = 27;
   var ENTER_KEYCODE = 13;
 
+  var SHOW_ERROR_TIME = 5000;
+  var DEBOUNCE_TIMEOUT = 500;
+
   var lastTimeout;
 
   window.globals = {
@@ -39,8 +42,7 @@
       var timer = setTimeout(function () {
         node.parentNode.removeChild(node);
         clearTimeout(timer);
-      }, 5000);
-
+      }, SHOW_ERROR_TIME);
     },
     clearElem: function (elem) {
       for (var i = elem.children.length - 1; i >= 0; i--) {
@@ -51,7 +53,7 @@
       if (lastTimeout) {
         clearTimeout(lastTimeout);
       }
-      lastTimeout = setTimeout(action, 500, context);
+      lastTimeout = setTimeout(action, DEBOUNCE_TIMEOUT, context);
     }
   };
 })();
