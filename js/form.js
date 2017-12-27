@@ -6,6 +6,9 @@
   var RESIZE_MAX = 100;
   var RESIZE_INIT = 100;
 
+  var PERCENT = 0.01;
+  var SATURATION = 3;
+
   var uploadSelectImage = document.querySelector('#upload-select-image');
   var uploadFile = uploadSelectImage.querySelector('#upload-file');
   var uploadCancel = uploadSelectImage.querySelector('#upload-cancel');
@@ -42,7 +45,7 @@
 
   var adjustScale = function (scale) {
     resizeControls.value = scale + '%';
-    effectImage.style.transform = 'scale(' + scale / 100 + ')';
+    effectImage.style.transform = 'scale(' + scale * PERCENT + ')';
   };
 
   var scaleSettings = {
@@ -65,9 +68,9 @@
     var EFFECTS = {
       'upload-effect-chrome': 'grayscale(' + val + ')',
       'upload-effect-sepia': 'sepia(' + val + ')',
-      'upload-effect-marvin': 'invert(' + val * 100 + '%)',
-      'upload-effect-phobos': 'blur(' + val * 3 + 'px)',
-      'upload-effect-heat': 'brightness(' + val * 3 + ')',
+      'upload-effect-marvin': 'invert(' + val / PERCENT + '%)',
+      'upload-effect-phobos': 'blur(' + val * SATURATION + 'px)',
+      'upload-effect-heat': 'brightness(' + val * SATURATION + ')',
       'upload-effect-none': ''
     };
 

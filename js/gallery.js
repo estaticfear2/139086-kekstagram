@@ -16,7 +16,7 @@
   var photos = null;
 
   var renderPictures = function (data) {
-    pictures.appendChild(window.picture.collectElements(data, window.picture.renderElement));
+    pictures.appendChild(window.picture.collect(data, window.picture.render));
 
     if (!photos) {
       photos = data;
@@ -52,7 +52,7 @@
         return;
       }
 
-      window.globals.clearElem(pictures);
+      window.globals.clear(pictures);
 
       photos.sort(function (a, b) {
         if (filter !== 'filter-random') {

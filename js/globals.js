@@ -44,7 +44,7 @@
         clearTimeout(timer);
       }, SHOW_ERROR_TIME);
     },
-    clearElem: function (elem) {
+    clear: function (elem) {
       for (var i = elem.children.length - 1; i >= 0; i--) {
         elem.removeChild(elem.children[i]);
       }
