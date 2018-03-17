@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var SERVER_URL = 'https://1510.dump.academy/kekstagram';
+  var SERVER_URL = 'https://js.dump.academy/kekstagram';
   var XHR_TIMEOUT = 10000;
 
   var load = function (data, onLoad, onError) {
